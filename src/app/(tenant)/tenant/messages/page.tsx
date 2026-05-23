@@ -7,7 +7,8 @@ interface Message {
   id: string;
   content: string;
   sender_id: string;
-  read: boolean;
+  recipient_id: string;
+  is_read: boolean;
   created_at: string;
 }
 
@@ -33,9 +34,9 @@ export default function TenantMessagesPage() {
 
       // Mark as read
       if (data) {
-        const unread = data.filter((m) => m.recipient_id === user.id && !m.read);
+        const unread = data.filter((m) => m.recipient_id === user.id && !m.is_read);
         unread.forEach((m) => {
-          supabase.from("messages").update({ read: true }).eq("id", m.id);
+          supabase.from("messages").update({ is_read: true }).eq("id", m.id);
         });
       }
 
@@ -60,7 +61,7 @@ export default function TenantMessagesPage() {
     });
 
     if (!error) {
-      setMessages((prev) => [...prev, { id: Date.now().toString(), content: newMessage, sender_id: user.id, read: true, created_at: new Date().toISOString() }]);
+      setMessages((prev) => [...prev, { id: Date.now().toString(), content: newMessage, sender_id: user.id, recipient_id: user.id, is_read: true, created_at: new Date().toISOString() }]);
       setNewMessage("");
     }
   };
