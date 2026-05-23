@@ -41,6 +41,7 @@ export default function LandlordDashboardLayout({
     { href: "/contractors", label: "Contractors", icon: "◒" },
     { href: "/financials", label: "Financials", icon: "◎" },
     { href: "/messages", label: "Messages", icon: "◓" },
+    { href: "/work-orders", label: "Work Orders", icon: "◯" },
     { href: "/documents", label: "Documents", icon: "◔" },
     { href: "/settings", label: "Settings", icon: "◕" },
   ];
