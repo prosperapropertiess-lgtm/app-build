@@ -39,10 +39,13 @@ export default function LandlordDashboardLayout({
     { href: "/tenants", label: "Tenants", icon: "◐" },
     { href: "/maintenance", label: "Maintenance", icon: "◑" },
     { href: "/contractors", label: "Contractors", icon: "◒" },
+    { href: "/notifications", label: "Alerts", icon: "🔔" },
     { href: "/financials", label: "Financials", icon: "◎" },
     { href: "/messages", label: "Messages", icon: "◓" },
     { href: "/work-orders", label: "Work Orders", icon: "◯" },
+    { href: "/export", label: "Export", icon: "▼" },
     { href: "/documents", label: "Documents", icon: "◔" },
+    { href: "/export", label: "Export", icon: "▼" },
     { href: "/settings", label: "Settings", icon: "◕" },
   ];
 
@@ -152,7 +155,7 @@ export default function LandlordDashboardLayout({
 
       {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex justify-around py-2 z-20">
-        {navItems.slice(0, 5).map((item) => (
+        {navItems.slice(0, 6).map((item) => (
           <Link
             key={item.href}
             href={item.href}
