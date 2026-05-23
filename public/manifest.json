@@ -1,0 +1,43 @@
+{
+  "name": "Project X",
+  "short_name": "ProjectX",
+  "description": "Property management for independent landlords",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f0f23",
+  "theme_color": "#0f0f23",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "finance"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "View your property dashboard"
+    },
+    {
+      "name": "Properties",
+      "url": "/properties",
+      "description": "View all properties"
+    },
+    {
+      "name": "Maintenance",
+      "url": "/maintenance",
+      "description": "View maintenance requests"
+    }
+  ]
+}

@@ -27,6 +27,48 @@ let entries: BuildEntry[] = [
     message: 'Stack defined — Next.js, Supabase, Stripe, OpenClaw AI',
     status: 'done',
     tag: 'spec'
+  },
+  {
+    id: '3',
+    timestamp: new Date().toISOString(),
+    message: 'Build dashboard live at localhost:3001/build-progress',
+    status: 'done',
+    tag: 'setup'
+  },
+  {
+    id: '4',
+    timestamp: new Date().toISOString(),
+    message: 'Supabase SQL migration written — 14 tables, RLS policies, triggers',
+    status: 'done',
+    tag: 'db'
+  },
+  {
+    id: '5',
+    timestamp: new Date().toISOString(),
+    message: 'Waiting for Supabase credentials to apply migration',
+    status: 'todo',
+    tag: 'db'
+  },
+  {
+    id: '6',
+    timestamp: new Date().toISOString(),
+    message: 'PWA setup: manifest, service worker, icons',
+    status: 'todo',
+    tag: 'frontend'
+  },
+  {
+    id: '7',
+    timestamp: new Date().toISOString(),
+    message: 'Auth pages: signup, login, session management',
+    status: 'todo',
+    tag: 'auth'
+  },
+  {
+    id: '8',
+    timestamp: new Date().toISOString(),
+    message: 'Layout shell: sidebar nav, mobile bottom nav, header',
+    status: 'todo',
+    tag: 'frontend'
   }
 ];
 
