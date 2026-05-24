@@ -35,30 +35,41 @@ export default function TenantMaintenancePage() {
     fetchRequests();
   }, []);
 
-  if (loading) return <div className="text-zinc-400 py-8">Loading...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
+    </div>
+  );
+
+  const cardStyle = { background: "var(--navy-900)", border: "1px solid var(--navy-700)" };
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-white mb-2">Maintenance</h1>
-        <a href="/tenant/maintenance/new" className="px-6 py-3 bg-green-500 hover:bg-green-400 text-zinc-950 font-semibold rounded-xl transition-colors">
+        <div>
+          <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Tenant</p>
+          <h1 className="text-2xl font-bold text-white">Maintenance</h1>
+        </div>
+        <a href="/tenant/maintenance/new" className="px-6 py-3 font-semibold rounded-xl hover:opacity-90 transition-opacity" style={{ background: "var(--gold-500)", color: "#060d1a" }}>
           + New Request
         </a>
       </div>
 
       {requests.length === 0 ? (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-12 text-center">
-          <p className="text-3xl mb-4">🔧</p>
+        <div className="rounded-2xl p-12 text-center" style={cardStyle}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(201,168,76,0.08)" }}>
+            <p className="text-3xl">🔧</p>
+          </div>
           <h3 className="text-xl font-semibold text-white mb-2">No maintenance requests</h3>
-          <p className="text-zinc-400 mb-6">Something broken? Let us know</p>
-          <a href="/tenant/maintenance/new" className="inline-block px-6 py-3 bg-green-500 hover:bg-green-400 text-zinc-950 font-semibold rounded-xl transition-colors">
+          <p className="mb-6" style={{ color: "#6b8aad" }}>Something broken? Let us know</p>
+          <a href="/tenant/maintenance/new" className="inline-block px-6 py-3 font-semibold rounded-xl hover:opacity-90 transition-opacity" style={{ background: "var(--gold-500)", color: "#060d1a" }}>
             Submit a Request
           </a>
         </div>
       ) : (
         <div className="grid gap-4">
           {requests.map((request) => (
-            <div key={request.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+            <div key={request.id} className="rounded-2xl p-6" style={cardStyle}>
               <div className="flex items-start justify-between gap-4 mb-3">
                 <h3 className="text-lg font-semibold text-white">{request.title}</h3>
                 <span className={`px-3 py-1 text-xs font-medium rounded-full ${
@@ -69,7 +80,7 @@ export default function TenantMaintenancePage() {
                   {request.status.replace("_", " ")}
                 </span>
               </div>
-              <p className="text-zinc-500 text-sm">
+              <p className="text-sm" style={{ color: "#4a6480" }}>
                 Submitted {new Date(request.created_at).toLocaleDateString()}
               </p>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface DashboardStats {
@@ -16,133 +17,134 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
-    totalProperties: 0,
-    totalUnits: 0,
-    totalTenants: 0,
-    openMaintenance: 0,
-    rentCollected: 0,
-    rentPending: 0,
-    recentPayments: [],
-    recentMaintenance: [],
+    totalProperties: 0, totalUnits: 0, totalTenants: 0, openMaintenance: 0,
+    rentCollected: 0, rentPending: 0, recentPayments: [], recentMaintenance: [],
   });
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const supabase = createClient();
-
     const fetchData = async () => {
-      // Get landlord ID from auth
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch properties count
-      const { count: propertyCount } = await supabase
-        .from("properties")
-        .select("*", { count: "exact", head: true })
-        .eq("landlord_id", user.id);
+      setUserName(user.user_metadata?.full_name?.split(" ")[0] || user.email?.split("@")[0] || "");
 
-      // Fetch units count
-      const { count: unitCount } = await supabase
-        .from("units")
-        .select("*", { count: "exact", head: true });
-
-      // Fetch tenants count
-      const { count: tenantCount } = await supabase
-        .from("tenants")
-        .select("*", { count: "exact", head: true })
-        .eq("landlord_id", user.id);
-
-      // Fetch open maintenance
-      const { count: maintenanceCount } = await supabase
-        .from("maintenance_requests")
-        .select("*", { count: "exact", head: true })
-        .eq("landlord_id", user.id)
-        .not("status", "eq", "completed")
-        .not("status", "eq", "closed");
-
-      // Fetch recent payments
-      const { data: payments } = await supabase
-        .from("payments")
-        .select("*")
-        .eq("landlord_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      // Fetch recent maintenance
-      const { data: maintenance } = await supabase
-        .from("maintenance_requests")
-        .select("*")
-        .eq("landlord_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
+      const [
+        { count: propertyCount },
+        { count: unitCount },
+        { count: tenantCount },
+        { count: maintenanceCount },
+        { data: payments },
+        { data: maintenance },
+      ] = await Promise.all([
+        supabase.from("properties").select("*", { count: "exact", head: true }).eq("landlord_id", user.id),
+        supabase.from("units").select("*", { count: "exact", head: true }),
+        supabase.from("tenants").select("*", { count: "exact", head: true }).eq("landlord_id", user.id),
+        supabase.from("maintenance_requests").select("*", { count: "exact", head: true }).eq("landlord_id", user.id).not("status", "eq", "completed").not("status", "eq", "closed"),
+        supabase.from("payments").select("*").eq("landlord_id", user.id).order("created_at", { ascending: false }).limit(5),
+        supabase.from("maintenance_requests").select("*").eq("landlord_id", user.id).order("created_at", { ascending: false }).limit(5),
+      ]);
 
       setStats({
-        totalProperties: propertyCount || 0,
-        totalUnits: unitCount || 0,
-        totalTenants: tenantCount || 0,
-        openMaintenance: maintenanceCount || 0,
-        rentCollected: 0,
-        rentPending: 0,
-        recentPayments: payments || [],
-        recentMaintenance: maintenance || [],
+        totalProperties: propertyCount || 0, totalUnits: unitCount || 0,
+        totalTenants: tenantCount || 0, openMaintenance: maintenanceCount || 0,
+        rentCollected: 0, rentPending: 0,
+        recentPayments: payments || [], recentMaintenance: maintenance || [],
       });
-
       setLoading(false);
     };
-
     fetchData();
   }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-zinc-400">Loading dashboard...</div>
+        <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
       </div>
     );
   }
 
+  const statCards = [
+    { label: "Properties", value: stats.totalProperties, icon: "🏠", href: "/properties" },
+    { label: "Units", value: stats.totalUnits, icon: "🔑", href: "/properties" },
+    { label: "Tenants", value: stats.totalTenants, icon: "👤", href: "/tenants" },
+    { label: "Open Issues", value: stats.openMaintenance, icon: "🔧", href: "/maintenance", alert: stats.openMaintenance > 0 },
+  ];
+
+  const quickActions = [
+    { href: "/properties/new", label: "Add Property", icon: "🏠" },
+    { href: "/tenants/invite", label: "Invite Tenant", icon: "✉️" },
+    { href: "/leases/new", label: "New Lease", icon: "📄" },
+    { href: "/financials", label: "Financials", icon: "💰" },
+  ];
+
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-zinc-400">Here's an overview of your properties</p>
+        <p className="text-sm mb-1" style={{ color: "#4a6480" }}>Good to see you back</p>
+        <h1 className="text-2xl font-bold text-white">{userName ? `Hello, ${userName}` : "Dashboard"}</h1>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Properties" value={stats.totalProperties} icon="◈" color="text-violet-400" />
-        <StatCard label="Units" value={stats.totalUnits} icon="◉" color="text-blue-400" />
-        <StatCard label="Tenants" value={stats.totalTenants} icon="◐" color="text-cyan-400" />
-        <StatCard label="Open Maintenance" value={stats.openMaintenance} icon="◑" color="text-orange-400" />
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {statCards.map(card => (
+          <Link key={card.label} href={card.href}
+            className="rounded-2xl p-5 flex flex-col gap-3 transition-all hover:scale-[1.02]"
+            style={{ background: "var(--navy-900)", border: `1px solid ${card.alert ? "rgba(201,168,76,0.4)" : "var(--navy-700)"}` }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xl">{card.icon}</span>
+              {card.alert && (
+                <span className="w-2 h-2 rounded-full" style={{ background: "var(--gold-500)" }} />
+              )}
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-white">{card.value}</p>
+              <p className="text-xs mt-0.5" style={{ color: "#6b8aad" }}>{card.label}</p>
+            </div>
+          </Link>
+        ))}
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <QuickAction href="/properties/new" label="Add Property" icon="+" />
-        <QuickAction href="/tenants/invite" label="Invite Tenant" icon="→" />
-        <QuickAction href="/maintenance" label="View Maintenance" icon="◑" />
-        <QuickAction href="/financials" label="Financials" icon="◎" />
+      <div>
+        <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: "#4a6480" }}>Quick Actions</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {quickActions.map(action => (
+            <Link key={action.href} href={action.href}
+              className="rounded-xl p-4 flex items-center gap-3 transition-all hover:scale-[1.02]"
+              style={{ background: "var(--navy-800)", border: "1px solid var(--navy-700)" }}
+            >
+              <span className="text-lg">{action.icon}</span>
+              <span className="text-sm font-medium text-white">{action.label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         {/* Recent Payments */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Recent Payments</h2>
+        <div className="rounded-2xl p-5" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-white">Recent Payments</h2>
+            <Link href="/financials" className="text-xs" style={{ color: "var(--gold-400)" }}>View all →</Link>
+          </div>
           {stats.recentPayments.length === 0 ? (
             <EmptyState message="No payments yet" />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-1">
               {stats.recentPayments.map((payment) => (
-                <div key={payment.id} className="flex items-center justify-between py-3 border-b border-zinc-800 last:border-0">
+                <div key={payment.id} className="flex items-center justify-between py-3"
+                  style={{ borderBottom: "1px solid var(--navy-800)" }}>
                   <div>
-                    <p className="text-white font-medium">${payment.amount?.toFixed(2) || "0.00"}</p>
-                    <p className="text-zinc-500 text-sm">{payment.type || "Rent"}</p>
+                    <p className="text-white font-medium text-sm">${payment.amount?.toFixed(2) || "0.00"}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "#4a6480" }}>{payment.type || "Rent"}</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${payment.status === 'completed' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
-                    {payment.status}
-                  </span>
+                  <StatusBadge status={payment.status} />
                 </div>
               ))}
             </div>
@@ -150,21 +152,25 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Maintenance */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Recent Maintenance</h2>
+        <div className="rounded-2xl p-5" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-white">Maintenance</h2>
+            <Link href="/maintenance" className="text-xs" style={{ color: "var(--gold-400)" }}>View all →</Link>
+          </div>
           {stats.recentMaintenance.length === 0 ? (
             <EmptyState message="No maintenance requests" />
           ) : (
-            <div className="space-y-3">
-              {stats.recentMaintenance.map((request) => (
-                <div key={request.id} className="flex items-center justify-between py-3 border-b border-zinc-800 last:border-0">
+            <div className="space-y-1">
+              {stats.recentMaintenance.map((req) => (
+                <div key={req.id} className="flex items-center justify-between py-3"
+                  style={{ borderBottom: "1px solid var(--navy-800)" }}>
                   <div>
-                    <p className="text-white font-medium">{request.title}</p>
-                    <p className="text-zinc-500 text-sm">{new Date(request.created_at).toLocaleDateString()}</p>
+                    <p className="text-white font-medium text-sm">{req.title}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "#4a6480" }}>
+                      {new Date(req.created_at).toLocaleDateString("en-CA", { month: "short", day: "numeric" })}
+                    </p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${getPriorityColor(request.priority)}`}>
-                    {request.priority}
-                  </span>
+                  <PriorityBadge priority={req.priority} />
                 </div>
               ))}
             </div>
@@ -175,48 +181,39 @@ export default function DashboardPage() {
   );
 }
 
-function StatCard({ label, value, icon, color }: { label: string; value: number; icon: string; color: string }) {
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, { bg: string; color: string }> = {
+    completed: { bg: "rgba(52,211,153,0.15)", color: "#34d399" },
+    pending: { bg: "rgba(201,168,76,0.15)", color: "var(--gold-400)" },
+    failed: { bg: "rgba(248,113,113,0.15)", color: "#f87171" },
+  };
+  const s = styles[status] || { bg: "rgba(107,138,173,0.15)", color: "#6b8aad" };
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-      <div className="flex items-center gap-3 mb-4">
-        <span className={`text-2xl ${color}`}>{icon}</span>
-        <span className="text-zinc-400 text-sm">{label}</span>
-      </div>
-      <p className="text-4xl font-bold text-white">{value}</p>
-    </div>
+    <span className="text-xs px-2 py-1 rounded-full capitalize" style={{ background: s.bg, color: s.color }}>
+      {status || "unknown"}
+    </span>
   );
 }
 
-function QuickAction({ href, label, icon }: { href: string; label: string; icon: string }) {
+function PriorityBadge({ priority }: { priority: string }) {
+  const styles: Record<string, { bg: string; color: string }> = {
+    emergency: { bg: "rgba(248,113,113,0.15)", color: "#f87171" },
+    urgent: { bg: "rgba(251,146,60,0.15)", color: "#fb923c" },
+    normal: { bg: "rgba(201,168,76,0.15)", color: "var(--gold-400)" },
+    low: { bg: "rgba(107,138,173,0.15)", color: "#6b8aad" },
+  };
+  const s = styles[priority] || { bg: "rgba(107,138,173,0.15)", color: "#6b8aad" };
   return (
-    <a
-      href={href}
-      className="bg-zinc-800 border border-zinc-700 hover:border-zinc-600 rounded-2xl p-6 flex items-center gap-4 transition-colors group"
-    >
-      <span className="text-2xl text-green-400 group-hover:text-green-300">{icon}</span>
-      <span className="text-white font-medium">{label}</span>
-    </a>
+    <span className="text-xs px-2 py-1 rounded-full capitalize" style={{ background: s.bg, color: s.color }}>
+      {priority || "—"}
+    </span>
   );
 }
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="text-center py-8 text-zinc-500">
-      <p>{message}</p>
+    <div className="text-center py-8" style={{ color: "#4a6480" }}>
+      <p className="text-sm">{message}</p>
     </div>
   );
-}
-
-function getPriorityColor(priority: string) {
-  switch (priority) {
-    case "urgent":
-    case "emergency":
-      return "bg-red-500/20 text-red-400";
-    case "normal":
-      return "bg-yellow-500/20 text-yellow-400";
-    case "low":
-      return "bg-blue-500/20 text-blue-400";
-    default:
-      return "bg-zinc-500/20 text-zinc-400";
-  }
 }

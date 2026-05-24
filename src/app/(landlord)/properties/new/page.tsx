@@ -79,19 +79,26 @@ export default function NewPropertyPage() {
     router.push("/properties");
   };
 
+  const inputClass = "w-full px-4 py-3 rounded-xl text-white placeholder-zinc-500 focus:outline-none";
+  const inputStyle = {
+    background: "var(--navy-800)",
+    border: "1px solid var(--navy-600)",
+  };
+
   return (
     <div className="max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Add Property</h1>
-        <p className="text-zinc-400">Add a new property to your portfolio</p>
+        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Properties</p>
+        <h1 className="text-2xl font-bold text-white">Add Property</h1>
+        <p className="mt-1" style={{ color: "#6b8aad" }}>Add a new property to your portfolio</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5">
+        <div className="rounded-2xl p-6 space-y-5" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
           <h2 className="text-lg font-semibold text-white">Address</h2>
 
           <div>
-            <label htmlFor="address_line_1" className="block text-sm font-medium text-zinc-300 mb-2">
+            <label htmlFor="address_line_1" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
               Street Address *
             </label>
             <input
@@ -100,14 +107,15 @@ export default function NewPropertyPage() {
               type="text"
               value={formData.address_line_1}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+              className={inputClass}
+              style={inputStyle}
               placeholder="123 Main Street"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="address_line_2" className="block text-sm font-medium text-zinc-300 mb-2">
+            <label htmlFor="address_line_2" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
               Unit/Apt Number
             </label>
             <input
@@ -116,14 +124,15 @@ export default function NewPropertyPage() {
               type="text"
               value={formData.address_line_2}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+              className={inputClass}
+              style={inputStyle}
               placeholder="Apt 101 (optional)"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="city" className="block text-sm font-medium text-zinc-300 mb-2">
+              <label htmlFor="city" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
                 City *
               </label>
               <input
@@ -132,14 +141,15 @@ export default function NewPropertyPage() {
                 type="text"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+                className={inputClass}
+                style={inputStyle}
                 placeholder="London"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="postal_code" className="block text-sm font-medium text-zinc-300 mb-2">
+              <label htmlFor="postal_code" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
                 Postal Code *
               </label>
               <input
@@ -148,7 +158,8 @@ export default function NewPropertyPage() {
                 type="text"
                 value={formData.postal_code}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+                className={inputClass}
+                style={inputStyle}
                 placeholder="N6A 1A1"
                 required
               />
@@ -156,11 +167,11 @@ export default function NewPropertyPage() {
           </div>
         </div>
 
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5">
+        <div className="rounded-2xl p-6 space-y-5" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
           <h2 className="text-lg font-semibold text-white">Property Details</h2>
 
           <div>
-            <label htmlFor="property_type" className="block text-sm font-medium text-zinc-300 mb-2">
+            <label htmlFor="property_type" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
               Property Type *
             </label>
             <select
@@ -168,7 +179,8 @@ export default function NewPropertyPage() {
               name="property_type"
               value={formData.property_type}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+              className={inputClass}
+              style={inputStyle}
               required
             >
               {PROPERTY_TYPES.map((type) => (
@@ -180,7 +192,7 @@ export default function NewPropertyPage() {
           </div>
 
           <div>
-            <label htmlFor="total_units" className="block text-sm font-medium text-zinc-300 mb-2">
+            <label htmlFor="total_units" className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>
               Number of Units *
             </label>
             <input
@@ -191,10 +203,11 @@ export default function NewPropertyPage() {
               max="50"
               value={formData.total_units}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500"
+              className={inputClass}
+              style={inputStyle}
               required
             />
-            <p className="text-zinc-500 text-sm mt-2">
+            <p className="text-sm mt-2" style={{ color: "#4a6480" }}>
               We'll create {formData.total_units} unit{formData.total_units > 1 ? "s" : ""} for this property
             </p>
           </div>
@@ -210,14 +223,16 @@ export default function NewPropertyPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-xl transition-colors"
+            className="flex-1 py-3 text-white font-medium rounded-xl hover:opacity-80 transition-opacity"
+            style={{ background: "var(--navy-800)" }}
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-zinc-950 font-semibold rounded-xl transition-colors disabled:opacity-50"
+            className="flex-1 py-3 font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+            style={{ background: "var(--gold-500)", color: "#060d1a" }}
           >
             {loading ? "Creating..." : "Create Property"}
           </button>

@@ -56,33 +56,39 @@ export default function NewMaintenanceRequestPage() {
     router.push("/tenant/dashboard");
   };
 
+  const inputClass = "w-full px-4 py-3 rounded-xl text-white";
+  const inputStyle = { background: "var(--navy-800)", border: "1px solid var(--navy-600)" };
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">New Maintenance Request</h1>
-        <p className="text-zinc-400">Describe the issue you're experiencing</p>
+        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Tenant</p>
+        <h1 className="text-2xl font-bold text-white">New Maintenance Request</h1>
+        <p className="mt-1" style={{ color: "#6b8aad" }}>Describe the issue you're experiencing</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5">
+        <div className="rounded-2xl p-6 space-y-5" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Issue Title *</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>Issue Title *</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white"
+              className={inputClass}
+              style={inputStyle}
               placeholder="e.g., Leaking faucet in bathroom"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Category</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData((p) => ({ ...p, category: e.target.value }))}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white"
+              className={inputClass}
+              style={inputStyle}
             >
               <option value="general">General</option>
               <option value="plumbing">Plumbing</option>
@@ -96,33 +102,35 @@ export default function NewMaintenanceRequestPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Description *</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>Description *</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white min-h-[120px]"
+              className={`${inputClass} min-h-[120px]`}
+              style={inputStyle}
               placeholder="Describe the issue in detail..."
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Priority</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: "#c8d6e5" }}>Priority</label>
             <div className="flex gap-2">
               {["low", "normal", "urgent"].map((priority) => (
                 <button
                   key={priority}
                   type="button"
                   onClick={() => setFormData((p) => ({ ...p, priority }))}
-                  className={`flex-1 py-3 rounded-xl font-medium text-sm transition-colors ${
+                  className="flex-1 py-3 rounded-xl font-medium text-sm transition-opacity hover:opacity-80"
+                  style={
                     formData.priority === priority
                       ? priority === "urgent"
-                        ? "bg-red-500 text-white"
+                        ? { background: "#ef4444", color: "#fff" }
                         : priority === "low"
-                        ? "bg-zinc-600 text-zinc-300"
-                        : "bg-green-500 text-zinc-950"
-                      : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
-                  }`}
+                        ? { background: "var(--navy-700)", color: "#c8d6e5" }
+                        : { background: "var(--gold-500)", color: "#060d1a" }
+                      : { background: "var(--navy-800)", color: "#6b8aad" }
+                  }
                 >
                   {priority.charAt(0).toUpperCase() + priority.slice(1)}
                 </button>
@@ -141,14 +149,16 @@ export default function NewMaintenanceRequestPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-xl transition-colors"
+            className="flex-1 py-3 text-white font-medium rounded-xl hover:opacity-80 transition-opacity"
+            style={{ background: "var(--navy-800)" }}
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-3 bg-green-500 hover:bg-green-400 text-zinc-950 font-semibold rounded-xl transition-colors disabled:opacity-50"
+            className="flex-1 py-3 font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+            style={{ background: "var(--gold-500)", color: "#060d1a" }}
           >
             {loading ? "Submitting..." : "Submit Request"}
           </button>

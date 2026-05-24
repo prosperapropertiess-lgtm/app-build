@@ -52,19 +52,27 @@ export default function NotificationsPage() {
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
-  if (loading) return <div className="text-zinc-400 py-8">Loading...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
+    </div>
+  );
+
+  const cardStyle = { background: "var(--navy-900)", border: "1px solid var(--navy-700)" };
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
-          <p className="text-zinc-400">Stay updated on your properties</p>
+          <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Alerts</p>
+          <h1 className="text-2xl font-bold text-white">Notifications</h1>
+          <p className="mt-1" style={{ color: "#6b8aad" }}>Stay updated on your properties</p>
         </div>
         {unreadCount > 0 && (
           <button
             onClick={markAllRead}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-xl transition-colors"
+            className="px-4 py-2 text-white text-sm rounded-xl hover:opacity-80 transition-opacity"
+            style={{ background: "var(--navy-800)" }}
           >
             Mark all as read
           </button>
@@ -72,30 +80,37 @@ export default function NotificationsPage() {
       </div>
 
       {notifications.length === 0 ? (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-12 text-center">
-          <p className="text-3xl mb-4">🔔</p>
+        <div className="rounded-2xl p-12 text-center" style={cardStyle}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(201,168,76,0.08)" }}>
+            <p className="text-3xl">🔔</p>
+          </div>
           <h3 className="text-xl font-semibold text-white mb-2">No notifications</h3>
-          <p className="text-zinc-400">You&apos;re all caught up!</p>
+          <p style={{ color: "#6b8aad" }}>You&apos;re all caught up!</p>
         </div>
       ) : (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={cardStyle}>
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`p-4 border-b border-zinc-800 last:border-0 ${!notification.is_read ? "bg-zinc-800/30" : ""}`}
+              className="p-4 last:border-0"
+              style={{
+                borderBottom: "1px solid var(--navy-700)",
+                background: !notification.is_read ? "rgba(201,168,76,0.04)" : undefined,
+              }}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <p className={`font-medium ${notification.is_read ? "text-zinc-400" : "text-white"}`}>
-                    {notification.title}
+                  <p className="font-medium" style={{ color: notification.is_read ? "#6b8aad" : undefined }}>
+                    {!notification.is_read && <span className="text-white">{notification.title}</span>}
+                    {notification.is_read && notification.title}
                   </p>
-                  <p className="text-zinc-500 text-sm mt-1">{notification.content}</p>
-                  <p className="text-zinc-600 text-xs mt-2">
+                  <p className="text-sm mt-1" style={{ color: "#4a6480" }}>{notification.content}</p>
+                  <p className="text-xs mt-2" style={{ color: "#3d5473" }}>
                     {new Date(notification.created_at).toLocaleString()}
                   </p>
                 </div>
                 {!notification.is_read && (
-                  <span className="w-2 h-2 bg-green-500 rounded-full mt-2" />
+                  <span className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ background: "var(--gold-500)" }} />
                 )}
               </div>
             </div>

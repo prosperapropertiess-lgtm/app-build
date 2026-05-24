@@ -32,17 +32,23 @@ export default function MaintenanceDetailPage() {
     fetchRequest();
   }, [params.id]);
 
-  if (loading) return <div className="text-zinc-400 py-8">Loading...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
+    </div>
+  );
   if (!request) return <div className="text-red-400 py-8">Request not found</div>;
+
+  const cardStyle = { background: "var(--navy-900)", border: "1px solid var(--navy-700)" };
 
   return (
     <div className="space-y-8">
       <div>
-        <button onClick={() => router.push("/maintenance")} className="text-zinc-400 hover:text-white text-sm mb-3">← Back</button>
+        <button onClick={() => router.push("/maintenance")} className="text-sm mb-3 hover:text-white transition-colors" style={{ color: "#6b8aad" }}>← Back</button>
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">{request.title}</h1>
-            <p className="text-zinc-500 text-sm">
+            <p className="text-sm" style={{ color: "#4a6480" }}>
               {request.units?.properties?.address_line_1} — Unit {request.units?.unit_number}
             </p>
           </div>
@@ -57,32 +63,32 @@ export default function MaintenanceDetailPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <h3 className="text-zinc-400 text-sm mb-3">Tenant</h3>
+        <div className="rounded-2xl p-6" style={cardStyle}>
+          <h3 className="text-sm mb-3" style={{ color: "#6b8aad" }}>Tenant</h3>
           <p className="text-white font-medium">{request.tenants?.full_name || "—"}</p>
-          <p className="text-zinc-500 text-sm">{request.tenants?.email}</p>
-          {request.tenants?.phone && <p className="text-zinc-500 text-sm">{request.tenants.phone}</p>}
+          <p className="text-sm" style={{ color: "#4a6480" }}>{request.tenants?.email}</p>
+          {request.tenants?.phone && <p className="text-sm" style={{ color: "#4a6480" }}>{request.tenants.phone}</p>}
         </div>
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <h3 className="text-zinc-400 text-sm mb-3">Assigned Contractor</h3>
+        <div className="rounded-2xl p-6" style={cardStyle}>
+          <h3 className="text-sm mb-3" style={{ color: "#6b8aad" }}>Assigned Contractor</h3>
           {request.contractors ? (
             <>
               <p className="text-white font-medium">{request.contractors.name}</p>
-              <p className="text-zinc-500 text-sm">{request.contractors.email}</p>
-              {request.contractors.phone && <p className="text-zinc-500 text-sm">{request.contractors.phone}</p>}
+              <p className="text-sm" style={{ color: "#4a6480" }}>{request.contractors.email}</p>
+              {request.contractors.phone && <p className="text-sm" style={{ color: "#4a6480" }}>{request.contractors.phone}</p>}
             </>
           ) : (
-            <p className="text-zinc-500">Not assigned</p>
+            <p style={{ color: "#4a6480" }}>Not assigned</p>
           )}
         </div>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+      <div className="rounded-2xl p-6" style={cardStyle}>
         <h3 className="text-white font-semibold mb-4">Description</h3>
-        <p className="text-zinc-300">{request.description}</p>
+        <p style={{ color: "#c8d6e5" }}>{request.description}</p>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+      <div className="rounded-2xl p-6" style={cardStyle}>
         <h3 className="text-white font-semibold mb-4">Update Status</h3>
         <div className="flex gap-2 flex-wrap">
           {["open", "assigned", "in_progress", "completed", "closed"].map((status) => (
@@ -93,11 +99,12 @@ export default function MaintenanceDetailPage() {
                 await supabase.from("maintenance_requests").update({ status }).eq("id", request.id);
                 setRequest((p: any) => ({ ...p, status }));
               }}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              className="px-4 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-80"
+              style={
                 request.status === status
-                  ? "bg-green-500 text-zinc-950"
-                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-              }`}
+                  ? { background: "var(--gold-500)", color: "#060d1a" }
+                  : { background: "var(--navy-800)", color: "#c8d6e5" }
+              }
             >
               {status.replace("_", " ")}
             </button>

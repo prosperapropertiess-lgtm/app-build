@@ -38,41 +38,54 @@ export default function LandlordMessagesPage() {
 
   const unreadCount = messages.filter((m) => !m.read).length;
 
-  if (loading) return <div className="text-zinc-400 py-8">Loading...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
+    </div>
+  );
+
+  const cardStyle = { background: "var(--navy-900)", border: "1px solid var(--navy-700)" };
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
-          <p className="text-zinc-400">Communicate with your tenants</p>
+          <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Communication</p>
+          <h1 className="text-2xl font-bold text-white">Messages</h1>
+          <p className="mt-1" style={{ color: "#6b8aad" }}>Communicate with your tenants</p>
         </div>
         {unreadCount > 0 && (
-          <span className="px-3 py-1 bg-green-500 text-zinc-950 text-sm font-semibold rounded-full">
+          <span className="px-3 py-1 text-sm font-semibold rounded-full" style={{ background: "var(--gold-500)", color: "#060d1a" }}>
             {unreadCount} unread
           </span>
         )}
       </div>
 
       {messages.length === 0 ? (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-12 text-center">
-          <p className="text-3xl mb-4">💬</p>
+        <div className="rounded-2xl p-12 text-center" style={cardStyle}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(201,168,76,0.08)" }}>
+            <p className="text-3xl">💬</p>
+          </div>
           <h3 className="text-xl font-semibold text-white mb-2">No messages yet</h3>
-          <p className="text-zinc-400">Start a conversation with your tenants</p>
+          <p style={{ color: "#6b8aad" }}>Start a conversation with your tenants</p>
         </div>
       ) : (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={cardStyle}>
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`p-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/50 transition-colors ${!message.read ? "bg-zinc-800/30" : ""}`}
+              className="p-4 last:border-0 transition-colors"
+              style={{
+                borderBottom: "1px solid var(--navy-700)",
+                background: !message.read ? "rgba(201,168,76,0.04)" : undefined,
+              }}
             >
               <div className="flex items-start justify-between gap-4 mb-2">
                 <p className="text-white font-medium">{message.sender?.full_name || "Unknown"}</p>
-                <span className="text-zinc-500 text-xs">{new Date(message.created_at).toLocaleString()}</span>
+                <span className="text-xs" style={{ color: "#4a6480" }}>{new Date(message.created_at).toLocaleString()}</span>
               </div>
-              <p className="text-zinc-300 text-sm line-clamp-2">{message.content}</p>
-              {!message.read && <span className="inline-block w-2 h-2 bg-green-500 rounded-full mt-2" />}
+              <p className="text-sm line-clamp-2" style={{ color: "#c8d6e5" }}>{message.content}</p>
+              {!message.read && <span className="inline-block w-2 h-2 rounded-full mt-2" style={{ background: "var(--gold-500)" }} />}
             </div>
           ))}
         </div>
