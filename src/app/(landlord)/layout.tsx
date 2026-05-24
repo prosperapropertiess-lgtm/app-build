@@ -56,8 +56,8 @@ export default function LandlordLayout({ children }: { children: React.ReactNode
             key={item.href} href={item.href} onClick={onClick}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
             style={active
-              ? { background: "rgba(201,168,76,0.12)", color: "var(--gold-400)", borderLeft: "2px solid var(--gold-500)" }
-              : { color: "#6b8aad" }
+              ? { background: "rgba(201,168,76,0.1)", color: "var(--gold-400)", borderLeft: "2px solid var(--gold-500)" }
+              : { color: "var(--muted)" }
             }
           >
             <span className="text-base w-5 text-center">{item.icon}</span>

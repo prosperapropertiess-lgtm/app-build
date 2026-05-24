@@ -1,28 +1,100 @@
 @import "tailwindcss";
 
 :root {
+  /* Brand — Navy */
   --navy-950: #060d1a;
   --navy-900: #0a1628;
   --navy-800: #0f1f3d;
   --navy-700: #162751;
   --navy-600: #1e3366;
   --navy-500: #274080;
+
+  /* Brand — Gold */
+  --gold-300: #f0d080;
   --gold-400: #e0b84a;
   --gold-500: #c9a84c;
   --gold-600: #a8883a;
+
+  /* Semantic */
   --background: var(--navy-950);
-  --foreground: #f0ead6;
+  --foreground: #e8dfc8;
+  --muted: #6b8aad;
+  --muted-subtle: #4a6480;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --card: rgba(10, 22, 40, 0.8);
+  --card-elevated: rgba(15, 31, 61, 0.6);
+
+  /* Typography */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), sans-serif;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--navy-700); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--navy-600); }
+
+/* Selection */
+::selection { background: rgba(201, 168, 76, 0.2); color: var(--gold-300); }
+
+/* Focus ring */
+:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; border-radius: 4px; }
+
+/* Smooth transitions for interactive elements */
+button, a { transition: all 200ms var(--ease-out); }
+
+/* Utility: display font */
+.font-display { font-family: var(--font-display); }
+
+/* Gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card glow on hover */
+.card-hover {
+  transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.card-hover:hover {
+  border-color: rgba(201, 168, 76, 0.2) !important;
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.08), 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Number display */
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* Ambient background glow */
+.bg-ambient {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+    var(--navy-950);
 }
