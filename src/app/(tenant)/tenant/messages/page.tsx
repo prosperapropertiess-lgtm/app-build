@@ -66,23 +66,30 @@ export default function TenantMessagesPage() {
     }
   };
 
-  if (loading) return <div className="text-zinc-400 py-8">Loading...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: "var(--navy-700)", borderTopColor: "var(--gold-500)" }} />
+    </div>
+  );
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-white">Messages</h1>
+      <div>
+        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#4a6480" }}>Tenant</p>
+        <h1 className="text-2xl font-bold text-white">Messages</h1>
+      </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 min-h-[400px] flex flex-col">
+      <div className="rounded-2xl p-6 min-h-[400px] flex flex-col" style={{ background: "var(--navy-900)", border: "1px solid var(--navy-700)" }}>
         {messages.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-zinc-500">No messages yet</p>
+            <p style={{ color: "#4a6480" }}>No messages yet</p>
           </div>
         ) : (
           <div className="flex-1 space-y-4 mb-4">
             {messages.map((message) => (
-              <div key={message.id} className={`p-4 rounded-xl ${message.sender_id === message.recipient_id ? "bg-zinc-800" : "bg-zinc-800/50"}`}>
-                <p className="text-zinc-300">{message.content}</p>
-                <p className="text-zinc-500 text-xs mt-2">{new Date(message.created_at).toLocaleString()}</p>
+              <div key={message.id} className="p-4 rounded-xl" style={{ background: "var(--navy-800)" }}>
+                <p style={{ color: "#c8d6e5" }}>{message.content}</p>
+                <p className="text-xs mt-2" style={{ color: "#4a6480" }}>{new Date(message.created_at).toLocaleString()}</p>
               </div>
             ))}
           </div>
@@ -93,10 +100,11 @@ export default function TenantMessagesPage() {
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white"
+            className="flex-1 px-4 py-3 rounded-xl text-white"
+            style={{ background: "var(--navy-800)", border: "1px solid var(--navy-600)" }}
             placeholder="Type a message..."
           />
-          <button type="submit" className="px-6 py-3 bg-green-500 hover:bg-green-400 text-zinc-950 font-semibold rounded-xl transition-colors">
+          <button type="submit" className="px-6 py-3 font-semibold rounded-xl hover:opacity-90 transition-opacity" style={{ background: "var(--gold-500)", color: "#060d1a" }}>
             Send
           </button>
         </form>
