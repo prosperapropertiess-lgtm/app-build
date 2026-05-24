@@ -32,6 +32,7 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
                       request.nextUrl.pathname.startsWith('/signup');
   const isPublicRoute = request.nextUrl.pathname === '/' ||
+                         request.nextUrl.pathname.startsWith('/auth/') ||
                          request.nextUrl.pathname.startsWith('/invite') ||
                          request.nextUrl.pathname.startsWith('/work-order') ||
                          request.nextUrl.pathname.startsWith('/build-progress');
